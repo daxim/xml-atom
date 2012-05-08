@@ -23,11 +23,12 @@ sub init_libxml {
     my %param = @_ == 1 ? (Stream => $_[0]) : @_;
     if (my $stream = delete $param{Stream}) {
         my $parser = delete $param{Parser} || XML::Atom->libxml_parser;
+        my $uri    = delete $param{URI};
         my $doc;
         if (ref($stream) eq 'SCALAR') {
-            $doc = $parser->parse_string($$stream);
+            $doc = $parser->parse_string($$stream, defined($uri) ? $uri : () );
         } elsif (ref($stream)) {
-            $doc = $parser->parse_fh($stream);
+            $doc = $parser->parse_fh($stream, defined($uri) ? $uri : () );
         } else {
             $doc = $parser->parse_file($stream);
         }

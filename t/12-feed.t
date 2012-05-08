@@ -2,7 +2,7 @@
 
 use strict;
 
-use Test::More tests => 33;
+use Test::More tests => 34;
 use XML::Atom::Feed;
 use URI;
 
@@ -72,3 +72,8 @@ is $entries[0]->title, 'Bar';
 is $feed->title, 'dive into atom';
 
 is $feed->content_type, "application/x.atom+xml";
+
+my $xml;
+{ local $/; open my $h, '<', 't/samples/base.xml'; $xml = readline $h; }
+$feed = XML::Atom::Feed->new(Stream => \$xml, URI => 'http://example.org/feeds/example/');
+is [$feed->entries]->[0]->link->uri, 'http://example.org/entry/foo/';
